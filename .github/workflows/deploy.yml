@@ -1,0 +1,26 @@
+name: Deploy to DigitalOcean
+
+on:
+  workflow_run:
+    workflows: ["Build and Push"]
+    types:
+      - completed
+  workflow_dispatch:
+
+env:
+  DOCKER_IMAGE: imhasib/express-boilerplate-server
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Deploy to DigitalOcean
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            docker compose -f /root/docker_speaking_club/docker-compose.yml up -d
