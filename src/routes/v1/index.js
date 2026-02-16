@@ -35,6 +35,10 @@ const swaggerSpecs = swaggerJsdoc({
 
 router.use(
   "/api-docs",
+  (req, res, next) => {
+    res.removeHeader("Content-Security-Policy");
+    next();
+  },
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpecs, { explorer: true }),
 );
