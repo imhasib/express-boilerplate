@@ -58,7 +58,7 @@ const refreshAuth = async (refreshToken) => {
     }
     await refreshTokenDoc.deleteOne();
     return tokenService.generateAuthTokens(user);
-  } catch (error) {
+  } catch (_error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
   }
 };
@@ -81,7 +81,7 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
     }
     await userService.updateUserById(user.id, { password: newPassword });
     await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
-  } catch (error) {
+  } catch (_error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Password reset failed");
   }
 };
@@ -103,7 +103,7 @@ const verifyEmail = async (verifyEmailToken) => {
     }
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true });
-  } catch (error) {
+  } catch (_error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
   }
 };
@@ -135,7 +135,7 @@ const loginWithGoogle = async (idToken) => {
       audience: config.google.clientId,
     });
     payload = ticket.getPayload();
-  } catch (error) {
+  } catch (_error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid Google token");
   }
 

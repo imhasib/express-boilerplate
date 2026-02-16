@@ -1,4 +1,3 @@
-const moment = require("moment");
 const nodemailer = require("nodemailer");
 const logger = require("../config/logger");
 const config = require("../config/config");
@@ -64,21 +63,6 @@ const sendVerificationEmail = async (to, token) => {
 To verify your email, click on this link: ${verificationEmailUrl}
 If you did not create an account, then ignore this email.`;
   await sendEmail(to, subject, text);
-};
-
-const getPeriodicMsgText = (period) => {
-  let cmpText = "today and yesterday";
-  let prdText = "Daily";
-
-  if (period === 7) {
-    cmpText = "this week and last week";
-    prdText = "Weekly";
-  } else if (period === 30) {
-    cmpText = "this month and last month";
-    prdText = "Monthly";
-  }
-
-  return { cmpText, prdText };
 };
 
 module.exports = {

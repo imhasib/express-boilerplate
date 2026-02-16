@@ -1,7 +1,7 @@
 const httpStatus = require("http-status").status;
 const logger = require("../config/logger");
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
   let { statusCode, message } = err;
 
   if (!statusCode) {

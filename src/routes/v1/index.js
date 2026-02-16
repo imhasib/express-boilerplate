@@ -3,7 +3,6 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const authRoute = require("./auth.route");
 const userRoute = require("./user.route");
-const config = require("../../config/config");
 const swaggerDefinition = require("../../docs/swaggerDef");
 
 const router = express.Router();
