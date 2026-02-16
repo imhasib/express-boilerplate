@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const { faker } = require('@faker-js/faker');
-const User = require('../../src/models/user.model');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const { faker } = require("@faker-js/faker");
+const User = require("../../src/models/user.model");
 
-const password = 'password1';
+const password = "password1";
 const salt = bcrypt.genSaltSync(8);
 const hashedPassword = bcrypt.hashSync(password, salt);
 
@@ -12,7 +12,7 @@ const userOne = {
   name: faker.person.fullName(),
   email: faker.internet.email().toLowerCase(),
   password,
-  role: 'user',
+  role: "user",
   isEmailVerified: false,
   mobile: faker.string.numeric(10),
 };
@@ -22,7 +22,7 @@ const userTwo = {
   name: faker.person.fullName(),
   email: faker.internet.email().toLowerCase(),
   password,
-  role: 'user',
+  role: "user",
   isEmailVerified: false,
   mobile: faker.string.numeric(10),
 };
@@ -32,13 +32,15 @@ const admin = {
   name: faker.person.fullName(),
   email: faker.internet.email().toLowerCase(),
   password,
-  role: 'admin',
+  role: "admin",
   isEmailVerified: false,
   mobile: faker.string.numeric(10),
 };
 
 const insertUsers = async (users) => {
-  await User.insertMany(users.map((user) => ({ ...user, password: hashedPassword })));
+  await User.insertMany(
+    users.map((user) => ({ ...user, password: hashedPassword })),
+  );
 };
 
 module.exports = {

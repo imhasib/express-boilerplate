@@ -1,7 +1,7 @@
-const moment = require('moment');
-const nodemailer = require('nodemailer');
-const logger = require('../config/logger');
-const config = require('../config/config');
+const moment = require("moment");
+const nodemailer = require("nodemailer");
+const logger = require("../config/logger");
+const config = require("../config/config");
 
 let transport = null;
 
@@ -10,11 +10,15 @@ const initiate = () => {
 
   transport = nodemailer.createTransport(config.email.smtp);
   /* istanbul ignore next */
-  if (config.env !== 'test') {
+  if (config.env !== "test") {
     transport
       .verify()
-      .then(() => logger.info('Connected to email server'))
-      .catch(() => logger.warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
+      .then(() => logger.info("Connected to email server"))
+      .catch(() =>
+        logger.warn(
+          "Unable to connect to email server. Make sure you have configured the SMTP options in .env",
+        ),
+      );
   }
 };
 
@@ -37,7 +41,7 @@ const sendEmail = async (to, subject, text) => {
  * @returns {Promise}
  */
 const sendResetPasswordEmail = async (to, token) => {
-  const subject = 'Reset password';
+  const subject = "Reset password";
   // replace this url with the link to the reset password page of your front-end app
   const resetPasswordUrl = `http://link-to-app/reset-password?token=${token}`;
   const text = `Dear user,
@@ -53,7 +57,7 @@ If you did not request any password resets, then ignore this email.`;
  * @returns {Promise}
  */
 const sendVerificationEmail = async (to, token) => {
-  const subject = 'Email Verification';
+  const subject = "Email Verification";
   // replace this url with the link to the email verification page of your front-end app
   const verificationEmailUrl = `http://link-to-app/verify-email?token=${token}`;
   const text = `Dear user,
@@ -63,20 +67,19 @@ If you did not create an account, then ignore this email.`;
 };
 
 const getPeriodicMsgText = (period) => {
-  let cmpText = 'today and yesterday';
-  let prdText = 'Daily';
+  let cmpText = "today and yesterday";
+  let prdText = "Daily";
 
   if (period === 7) {
-    cmpText = 'this week and last week';
-    prdText = 'Weekly';
+    cmpText = "this week and last week";
+    prdText = "Weekly";
   } else if (period === 30) {
-    cmpText = 'this month and last month';
-    prdText = 'Monthly';
+    cmpText = "this month and last month";
+    prdText = "Monthly";
   }
 
   return { cmpText, prdText };
 };
-
 
 module.exports = {
   transport,

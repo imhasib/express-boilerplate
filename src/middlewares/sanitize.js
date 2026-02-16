@@ -1,4 +1,4 @@
-const mongoSanitize = require('mongo-sanitize');
+const mongoSanitize = require("mongo-sanitize");
 
 const sanitize = (req, res, next) => {
   // Sanitize body (mutable)

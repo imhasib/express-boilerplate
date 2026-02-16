@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
-const { toJSON, paginate } = require('./plugins');
-const { roles } = require('../config/roles');
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcryptjs");
+const { toJSON, paginate } = require("./plugins");
+const { roles } = require("../config/roles");
 
 const userSchema = mongoose.Schema(
   {
@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema(
       lowercase: true,
       validate(value) {
         if (!validator.isEmail(value)) {
-          throw new Error('Invalid email');
+          throw new Error("Invalid email");
         }
       },
     },
@@ -32,7 +32,9 @@ const userSchema = mongoose.Schema(
       minlength: 8,
       validate(value) {
         if (value && (!value.match(/\d/) || !value.match(/[a-zA-Z]/))) {
-          throw new Error('Password must contain at least one letter and one number');
+          throw new Error(
+            "Password must contain at least one letter and one number",
+          );
         }
       },
       private: true, // used by the toJSON plugin
@@ -48,7 +50,7 @@ const userSchema = mongoose.Schema(
     role: {
       type: String,
       enum: roles,
-      default: 'user',
+      default: "user",
     },
     mobile: {
       type: String,
@@ -62,7 +64,7 @@ const userSchema = mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // add plugin that converts mongoose to json
@@ -102,9 +104,9 @@ userSchema.statics.findByGoogleId = async function (googleId) {
   return this.findOne({ googleId });
 };
 
-userSchema.pre('save', async function () {
+userSchema.pre("save", async function () {
   const user = this;
-  if (user.isModified('password') && user.password) {
+  if (user.isModified("password") && user.password) {
     user.password = await bcrypt.hash(user.password, 8);
   }
 });
@@ -112,6 +114,6 @@ userSchema.pre('save', async function () {
 /**
  * @typedef User
  */
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

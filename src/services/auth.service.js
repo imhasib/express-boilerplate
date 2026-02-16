@@ -1,12 +1,12 @@
-const httpStatus = require('http-status').status;
-const { OAuth2Client } = require('google-auth-library');
-const tokenService = require('./token.service');
-const userService = require('./user.service');
-const Token = require('../models/token.model');
-const { User } = require('../models');
-const ApiError = require('../utils/ApiError');
-const { tokenTypes } = require('../config/tokens');
-const config = require('../config/config');
+const httpStatus = require("http-status").status;
+const { OAuth2Client } = require("google-auth-library");
+const tokenService = require("./token.service");
+const userService = require("./user.service");
+const Token = require("../models/token.model");
+const { User } = require("../models");
+const ApiError = require("../utils/ApiError");
+const { tokenTypes } = require("../config/tokens");
+const config = require("../config/config");
 
 const googleClient = new OAuth2Client(config.google.clientId);
 
@@ -19,7 +19,7 @@ const googleClient = new OAuth2Client(config.google.clientId);
 const loginUserWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email);
   if (!user || !(await user.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
   }
   return user;
 };
@@ -30,9 +30,13 @@ const loginUserWithEmailAndPassword = async (email, password) => {
  * @returns {Promise}
  */
 const logout = async (refreshToken) => {
-  const refreshTokenDoc = await Token.findOne({ token: refreshToken, type: tokenTypes.REFRESH, blacklisted: false });
+  const refreshTokenDoc = await Token.findOne({
+    token: refreshToken,
+    type: tokenTypes.REFRESH,
+    blacklisted: false,
+  });
   if (!refreshTokenDoc) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "Not found");
   }
   await Token.deleteOne({ _id: refreshTokenDoc._id });
 };
@@ -44,7 +48,10 @@ const logout = async (refreshToken) => {
  */
 const refreshAuth = async (refreshToken) => {
   try {
-    const refreshTokenDoc = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
+    const refreshTokenDoc = await tokenService.verifyToken(
+      refreshToken,
+      tokenTypes.REFRESH,
+    );
     const user = await userService.getUserById(refreshTokenDoc.user);
     if (!user) {
       throw new Error();
@@ -52,7 +59,7 @@ const refreshAuth = async (refreshToken) => {
     await refreshTokenDoc.deleteOne();
     return tokenService.generateAuthTokens(user);
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
   }
 };
 
@@ -64,7 +71,10 @@ const refreshAuth = async (refreshToken) => {
  */
 const resetPassword = async (resetPasswordToken, newPassword) => {
   try {
-    const resetPasswordTokenDoc = await tokenService.verifyToken(resetPasswordToken, tokenTypes.RESET_PASSWORD);
+    const resetPasswordTokenDoc = await tokenService.verifyToken(
+      resetPasswordToken,
+      tokenTypes.RESET_PASSWORD,
+    );
     const user = await userService.getUserById(resetPasswordTokenDoc.user);
     if (!user) {
       throw new Error();
@@ -72,7 +82,7 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
     await userService.updateUserById(user.id, { password: newPassword });
     await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Password reset failed");
   }
 };
 
@@ -83,7 +93,10 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
  */
 const verifyEmail = async (verifyEmailToken) => {
   try {
-    const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
+    const verifyEmailTokenDoc = await tokenService.verifyToken(
+      verifyEmailToken,
+      tokenTypes.VERIFY_EMAIL,
+    );
     const user = await userService.getUserById(verifyEmailTokenDoc.user);
     if (!user) {
       throw new Error();
@@ -91,7 +104,7 @@ const verifyEmail = async (verifyEmailToken) => {
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Email verification failed");
   }
 };
 
@@ -123,7 +136,7 @@ const loginWithGoogle = async (idToken) => {
     });
     payload = ticket.getPayload();
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid Google token');
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid Google token");
   }
 
   const { sub: googleId, email, name, picture } = payload;

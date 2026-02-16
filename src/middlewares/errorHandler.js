@@ -1,6 +1,5 @@
-
-const httpStatus = require('http-status').status;
-const logger = require('../config/logger');
+const httpStatus = require("http-status").status;
+const logger = require("../config/logger");
 
 const errorHandler = (err, req, res, next) => {
   let { statusCode, message } = err;
@@ -14,10 +13,10 @@ const errorHandler = (err, req, res, next) => {
   const response = {
     code: statusCode,
     message,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
   };
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     logger.error(err.message);
   }
 

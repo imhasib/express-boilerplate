@@ -1,6 +1,6 @@
 const rights = Object.freeze({
-  manageUsers: 'manageUsers',
-  getUsers: 'getUsers',
+  manageUsers: "manageUsers",
+  getUsers: "getUsers",
 });
 
 const allRoles = {

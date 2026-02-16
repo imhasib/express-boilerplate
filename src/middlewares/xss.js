@@ -1,7 +1,7 @@
-const { JSDOM } = require('jsdom');
-const DOMPurify = require('dompurify');
+const { JSDOM } = require("jsdom");
+const DOMPurify = require("dompurify");
 
-const window = new JSDOM('').window;
+const window = new JSDOM("").window;
 const purify = DOMPurify(window);
 
 const xss = (req, res, next) => {

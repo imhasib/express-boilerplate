@@ -1,6 +1,6 @@
-const httpStatus = require('http-status').status;
-const { User } = require('../models');
-const ApiError = require('../utils/ApiError');
+const httpStatus = require("http-status").status;
+const { User } = require("../models");
+const ApiError = require("../utils/ApiError");
 
 /**
  * Create a user
@@ -9,7 +9,7 @@ const ApiError = require('../utils/ApiError');
  */
 const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
   return User.create(userBody);
 };
@@ -64,10 +64,10 @@ const getAllUsersByRole = async (roles) => {
 const updateUserById = async (userId, updateBody) => {
   const user = await getUserById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
   Object.assign(user, updateBody);
   await user.save();
@@ -82,7 +82,7 @@ const updateUserById = async (userId, updateBody) => {
 const deleteUserById = async (userId) => {
   const user = await getUserById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
   await User.findByIdAndDelete(userId);
   return user;
@@ -97,7 +97,7 @@ const countUsersByRole = async () => {
   return User.aggregate([
     {
       $group: {
-        _id: '$role', // Group by the 'role' field
+        _id: "$role", // Group by the 'role' field
         count: { $sum: 1 }, // Count the number of documents in each group
       },
     },

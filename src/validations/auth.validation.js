@@ -1,5 +1,5 @@
-const Joi = require('joi');
-const { password } = require('./custom.validation');
+const Joi = require("joi");
+const { password } = require("./custom.validation");
 
 const register = {
   body: Joi.object().keys({
@@ -10,7 +10,7 @@ const register = {
       // .length(10)
       // .pattern(/^[0-9]+$/)
       .required(),
-    roles: Joi.string().valid('admin', 'teacher', 'student', 'user').optional(),
+    roles: Joi.string().valid("admin", "teacher", "student", "user").optional(),
   }),
 };
 

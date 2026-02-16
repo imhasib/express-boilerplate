@@ -1,8 +1,8 @@
-const httpStatus = require('http-status').status;
-const pick = require('../utils/pick');
-const ApiError = require('../utils/ApiError');
-const catchAsync = require('../utils/asyncHandler');
-const { userService } = require('../services');
+const httpStatus = require("http-status").status;
+const pick = require("../utils/pick");
+const ApiError = require("../utils/ApiError");
+const catchAsync = require("../utils/asyncHandler");
+const { userService } = require("../services");
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -10,24 +10,24 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getUsers = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ["name", "role"]);
   if (filter.name) {
     // eslint-disable-next-line
-    filter.name = { $regex: new RegExp(filter.name, 'i') }; // work like %someName% in SQL
+    filter.name = { $regex: new RegExp(filter.name, "i") }; // work like %someName% in SQL
   }
-  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const options = pick(req.query, ["sortBy", "limit", "page"]);
   const result = await userService.queryUsers(filter, options);
   res.send(result);
 });
 
 const searchUser = catchAsync(async (req, res) => {
   // eslint-disable-next-line
-  const searchExp = { $regex: new RegExp(req.query.searchText, 'i') }; // work like %someName% in SQL
+  const searchExp = { $regex: new RegExp(req.query.searchText, "i") }; // work like %someName% in SQL
 
   const filter = { $or: [{ name: searchExp }, { email: searchExp }] };
 
   const options = {
-    sortBy: 'email:asc',
+    sortBy: "email:asc",
     limit: 3,
     page: 1,
   };
@@ -46,7 +46,7 @@ const searchUser = catchAsync(async (req, res) => {
 const getUser = catchAsync(async (req, res) => {
   const user = await userService.getUserById(req.params.userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
   res.send(user);
 });
