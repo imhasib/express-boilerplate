@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign */
+ 
 
 /**
  * A mongoose schema plugin which applies the following in the toJSON transform call:

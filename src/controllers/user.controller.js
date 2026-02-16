@@ -12,7 +12,7 @@ const createUser = catchAsync(async (req, res) => {
 const getUsers = catchAsync(async (req, res) => {
   const filter = pick(req.query, ["name", "role"]);
   if (filter.name) {
-    // eslint-disable-next-line
+     
     filter.name = { $regex: new RegExp(filter.name, "i") }; // work like %someName% in SQL
   }
   const options = pick(req.query, ["sortBy", "limit", "page"]);
@@ -21,7 +21,7 @@ const getUsers = catchAsync(async (req, res) => {
 });
 
 const searchUser = catchAsync(async (req, res) => {
-  // eslint-disable-next-line
+   
   const searchExp = { $regex: new RegExp(req.query.searchText, "i") }; // work like %someName% in SQL
 
   const filter = { $or: [{ name: searchExp }, { email: searchExp }] };
