@@ -48,7 +48,7 @@ const userSchema = mongoose.Schema(
     role: {
       type: String,
       enum: roles,
-      default: 'admin',
+      default: 'user',
     },
     mobile: {
       type: String,
@@ -102,12 +102,11 @@ userSchema.statics.findByGoogleId = async function (googleId) {
   return this.findOne({ googleId });
 };
 
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function () {
   const user = this;
   if (user.isModified('password') && user.password) {
     user.password = await bcrypt.hash(user.password, 8);
   }
-  next();
 });
 
 /**

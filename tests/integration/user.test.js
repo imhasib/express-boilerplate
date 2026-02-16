@@ -1,6 +1,6 @@
 const request = require('supertest');
-const faker = require('@faker-js/faker');
-const httpStatus = require('http-status').status;;
+const { faker } = require('@faker-js/faker');
+const httpStatus = require('http-status').status;
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { User } = require('../../src/models');
@@ -15,10 +15,11 @@ describe('User routes', () => {
 
     beforeEach(() => {
       newUser = {
-        name: faker.name.findName(),
+        name: faker.person.fullName(),
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
         role: 'user',
+        mobile: faker.string.numeric(10),
       };
     });
 
@@ -37,13 +38,14 @@ describe('User routes', () => {
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
+        mobile: newUser.mobile,
         isEmailVerified: false,
       });
 
       const dbUser = await User.findById(res.body.id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(newUser.password);
-      expect(dbUser).toMatchObject({ name: newUser.name, email: newUser.email, role: newUser.role, isEmailVerified: false });
+      expect(dbUser).toMatchObject({ name: newUser.name, email: newUser.email, role: newUser.role, mobile: newUser.mobile, isEmailVerified: false });
     });
 
     test('should be able to create an admin as well', async () => {
@@ -163,6 +165,7 @@ describe('User routes', () => {
         name: userOne.name,
         email: userOne.email,
         role: userOne.role,
+        mobile: userOne.mobile,
         isEmailVerified: userOne.isEmailVerified,
       });
     });
@@ -366,6 +369,7 @@ describe('User routes', () => {
         email: userOne.email,
         name: userOne.name,
         role: userOne.role,
+        mobile: userOne.mobile,
         isEmailVerified: userOne.isEmailVerified,
       });
     });
@@ -482,7 +486,7 @@ describe('User routes', () => {
     test('should return 200 and successfully update user if data is ok', async () => {
       await insertUsers([userOne]);
       const updateBody = {
-        name: faker.name.findName(),
+        name: faker.person.fullName(),
         email: faker.internet.email().toLowerCase(),
         password: 'newPassword1',
       };
@@ -499,25 +503,26 @@ describe('User routes', () => {
         name: updateBody.name,
         email: updateBody.email,
         role: 'user',
+        mobile: userOne.mobile,
         isEmailVerified: false,
       });
 
       const dbUser = await User.findById(userOne._id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(updateBody.password);
-      expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user' });
+      expect(dbUser).toMatchObject({ name: updateBody.name, email: updateBody.email, role: 'user', mobile: userOne.mobile });
     });
 
     test('should return 401 error if access token is missing', async () => {
       await insertUsers([userOne]);
-      const updateBody = { name: faker.name.findName() };
+      const updateBody = { name: faker.person.fullName() };
 
       await request(app).patch(`/v1/users/${userOne._id}`).send(updateBody).expect(httpStatus.UNAUTHORIZED);
     });
 
     test('should return 403 if user is updating another user', async () => {
       await insertUsers([userOne, userTwo]);
-      const updateBody = { name: faker.name.findName() };
+      const updateBody = { name: faker.person.fullName() };
 
       await request(app)
         .patch(`/v1/users/${userTwo._id}`)
@@ -528,7 +533,7 @@ describe('User routes', () => {
 
     test('should return 200 and successfully update user if admin is updating another user', async () => {
       await insertUsers([userOne, admin]);
-      const updateBody = { name: faker.name.findName() };
+      const updateBody = { name: faker.person.fullName() };
 
       await request(app)
         .patch(`/v1/users/${userOne._id}`)
@@ -539,7 +544,7 @@ describe('User routes', () => {
 
     test('should return 404 if admin is updating another user that is not found', async () => {
       await insertUsers([admin]);
-      const updateBody = { name: faker.name.findName() };
+      const updateBody = { name: faker.person.fullName() };
 
       await request(app)
         .patch(`/v1/users/${userOne._id}`)
@@ -550,7 +555,7 @@ describe('User routes', () => {
 
     test('should return 400 error if userId is not a valid mongo id', async () => {
       await insertUsers([admin]);
-      const updateBody = { name: faker.name.findName() };
+      const updateBody = { name: faker.person.fullName() };
 
       await request(app)
         .patch(`/v1/users/invalidId`)

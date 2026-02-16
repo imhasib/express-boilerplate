@@ -1,5 +1,5 @@
 
-const httpStatus = require('http-status').status;;
+const httpStatus = require('http-status').status;
 const logger = require('../config/logger');
 
 const errorHandler = (err, req, res, next) => {

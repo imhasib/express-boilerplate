@@ -1,6 +1,6 @@
 const request = require('supertest');
-const faker = require('@faker-js/faker');
-const httpStatus = require('http-status').status;;
+const { faker } = require('@faker-js/faker');
+const httpStatus = require('http-status').status;
 const httpMocks = require('node-mocks-http');
 const moment = require('moment');
 const bcrypt = require('bcryptjs');
@@ -23,9 +23,10 @@ describe('Auth routes', () => {
     let newUser;
     beforeEach(() => {
       newUser = {
-        name: faker.name.findName(),
+        name: faker.person.fullName(),
         email: faker.internet.email().toLowerCase(),
         password: 'password1',
+        mobile: faker.string.numeric(10),
       };
     });
 
@@ -38,13 +39,14 @@ describe('Auth routes', () => {
         name: newUser.name,
         email: newUser.email,
         role: 'user',
+        mobile: newUser.mobile,
         isEmailVerified: false,
       });
 
       const dbUser = await User.findById(res.body.user.id);
       expect(dbUser).toBeDefined();
       expect(dbUser.password).not.toBe(newUser.password);
-      expect(dbUser).toMatchObject({ name: newUser.name, email: newUser.email, role: 'user', isEmailVerified: false });
+      expect(dbUser).toMatchObject({ name: newUser.name, email: newUser.email, role: 'user', mobile: newUser.mobile, isEmailVerified: false });
 
       expect(res.body.tokens).toEqual({
         access: { token: expect.anything(), expires: expect.anything() },
