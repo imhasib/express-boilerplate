@@ -77,7 +77,6 @@ describe("toJSON plugin", () => {
       {
         toJSON: {
           transform: (doc, ret) => {
-             
             delete ret.private;
           },
         },

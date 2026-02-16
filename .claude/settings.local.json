@@ -9,7 +9,9 @@
       "Bash(npx cross-env NODE_ENV=test node:*)",
       "Bash(npx cross-env NODE_ENV=test npx jest:*)",
       "Bash(del:*)",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "Bash(npm run prettier:*)",
+      "Bash(npm run prettier:fix:*)"
     ]
   }
 }

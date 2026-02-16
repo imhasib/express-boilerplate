@@ -1,5 +1,3 @@
- 
-
 const paginate = (schema) => {
   /**
    * @typedef {Object} QueryResult
