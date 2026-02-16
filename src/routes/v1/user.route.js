@@ -78,6 +78,10 @@ module.exports = router;
  *                 format: password
  *                 minLength: 8
  *                 description: At least one number and one letter
+ *               picture:
+ *                 type: string
+ *                 format: uri
+ *                 description: URL of the user's profile picture
  *               roles:
  *                  type: string
  *                  enum: [user, admin, teacher, student]
@@ -86,6 +90,7 @@ module.exports = router;
  *               email: user@example.com
  *               password: Test@123
  *               mobile: +88016
+ *               picture: https://example.com/avatar.jpg
  *               roles: admin
  *     responses:
  *       "201":
@@ -230,10 +235,15 @@ module.exports = router;
  *                 format: password
  *                 minLength: 8
  *                 description: At least one number and one letter
+ *               picture:
+ *                 type: string
+ *                 format: uri
+ *                 description: URL of the user's profile picture
  *             example:
  *               name: user
  *               email: user@example.com
  *               password: password1
+ *               picture: https://example.com/avatar.jpg
  *     responses:
  *       "200":
  *         description: OK

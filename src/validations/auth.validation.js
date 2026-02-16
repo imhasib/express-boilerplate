@@ -10,6 +10,7 @@ const register = {
       // .length(10)
       // .pattern(/^[0-9]+$/)
       .required(),
+    picture: Joi.string().uri().optional(),
     roles: Joi.string().valid("admin", "teacher", "student", "user").optional(),
   }),
 };

@@ -84,6 +84,10 @@ module.exports = router;
  *                 format: password
  *                 minLength: 8
  *                 description: At least one number and one letter
+ *               picture:
+ *                 type: string
+ *                 format: uri
+ *                 description: URL of the user's profile picture
  *               roles:
  *                 type: string
  *             example:
@@ -91,6 +95,7 @@ module.exports = router;
  *               mobile: "+8801610111111"
  *               email: user@example.com
  *               password: Test@123
+ *               picture: "https://example.com/avatar.jpg"
  *               roles: "admin"
  *     responses:
  *       "201":

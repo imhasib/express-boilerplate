@@ -10,6 +10,7 @@ const createUser = {
       // .length(10)
       // .pattern(/^[0-9]+$/)
       .required(),
+    picture: Joi.string().uri().optional(),
     role: Joi.string().valid("user", "teacher", "admin"),
   }),
 };
@@ -41,6 +42,7 @@ const updateUser = {
       password: Joi.string().custom(password),
       name: Joi.string(),
       mobile: Joi.string(),
+      picture: Joi.string().uri(),
     })
     .min(1),
 };

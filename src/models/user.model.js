@@ -45,7 +45,8 @@ const userSchema = mongoose.Schema(
       sparse: true,
     },
     picture: {
-      type: Buffer,
+      type: String,
+      trim: true,
     },
     role: {
       type: String,
