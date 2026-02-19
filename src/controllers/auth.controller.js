@@ -77,6 +77,10 @@ const googleAuth = catchAsync(async (req, res) => {
   res.send({ user, tokens });
 });
 
+const getMe = catchAsync(async (req, res) => {
+  res.send(req.user);
+});
+
 module.exports = {
   register,
   login,
@@ -88,4 +92,5 @@ module.exports = {
   verifyEmail,
   getRoles,
   googleAuth,
+  getMe,
 };

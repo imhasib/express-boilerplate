@@ -44,6 +44,7 @@ router.post(
   authController.verifyEmail,
 );
 router.get("/roles", auth("getRoles"), authController.getRoles);
+router.get("/me", auth(), authController.getMe);
 
 module.exports = router;
 
@@ -394,4 +395,49 @@ module.exports = router;
  *         description: No content
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Get current user's profile
+ *     description: Returns the authenticated user's profile information.
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                   format: email
+ *                 role:
+ *                   type: string
+ *                 mobile:
+ *                   type: string
+ *                 isEmailVerified:
+ *                   type: boolean
+ *                 picture:
+ *                   type: string
+ *                   format: uri
+ *                 id:
+ *                   type: string
+ *             example:
+ *               name: "hasib 1"
+ *               email: "hasib@mail.com"
+ *               role: "user"
+ *               mobile: "01610660167"
+ *               isEmailVerified: false
+ *               picture: "https://express-boilerplate-server-latest.onrender.com/v1/file/699440720484c3d5875c0798"
+ *               id: "69943a610484c3d5875c0778"
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
  */
