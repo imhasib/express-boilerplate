@@ -4,6 +4,7 @@ const swaggerUi = require("swagger-ui-express");
 const authRoute = require("./auth.route");
 const userRoute = require("./user.route");
 const fileRoute = require("./file.route");
+const meRoute = require("./me.route");
 const swaggerDefinition = require("../../docs/swaggerDef");
 
 const router = express.Router();
@@ -20,6 +21,10 @@ const defaultRoutes = [
   {
     path: "/file",
     route: fileRoute,
+  },
+  {
+    path: "/me",
+    route: meRoute,
   },
 ];
 

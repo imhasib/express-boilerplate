@@ -13,3 +13,6 @@ yarn-error.log*
 
 # Production
 /build
+
+# IDE
+.idea

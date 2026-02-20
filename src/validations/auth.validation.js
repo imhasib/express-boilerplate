@@ -61,6 +61,13 @@ const googleAuth = {
   }),
 };
 
+const changePassword = {
+  body: Joi.object().keys({
+    currentPassword: Joi.string().required(),
+    newPassword: Joi.string().required().custom(password),
+  }),
+};
+
 module.exports = {
   register,
   login,
@@ -70,4 +77,5 @@ module.exports = {
   resetPassword,
   verifyEmail,
   googleAuth,
+  changePassword,
 };

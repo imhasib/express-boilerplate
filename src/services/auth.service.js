@@ -109,20 +109,6 @@ const verifyEmail = async (verifyEmailToken) => {
 };
 
 /**
- * Fetch image from URL and return as Buffer
- * @param {string} url - The image URL
- * @returns {Promise<Buffer>}
- */
-const fetchImageAsBuffer = async (url) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    return null;
-  }
-  const arrayBuffer = await response.arrayBuffer();
-  return Buffer.from(arrayBuffer);
-};
-
-/**
  * Login or register with Google
  * @param {string} idToken - The Google ID token from frontend
  * @returns {Promise<User>}
@@ -146,12 +132,9 @@ const loginWithGoogle = async (idToken) => {
 
   if (user) {
     // User exists with this Google ID, update picture if needed
-    if (picture) {
-      const pictureBuffer = await fetchImageAsBuffer(picture);
-      if (pictureBuffer) {
-        user.picture = pictureBuffer;
-        await user.save();
-      }
+    if (picture && user.picture !== picture) {
+      user.picture = picture;
+      await user.save();
     }
     return user;
   }
@@ -163,26 +146,46 @@ const loginWithGoogle = async (idToken) => {
     // Link Google account to existing user
     user.googleId = googleId;
     if (picture) {
-      const pictureBuffer = await fetchImageAsBuffer(picture);
-      if (pictureBuffer) {
-        user.picture = pictureBuffer;
-      }
+      user.picture = picture;
     }
     await user.save();
     return user;
   }
 
   // Create new user
-  const pictureBuffer = picture ? await fetchImageAsBuffer(picture) : null;
   user = await User.create({
     name,
     email,
     googleId,
-    picture: pictureBuffer,
+    picture: picture || null,
     isEmailVerified: true, // Google emails are verified
   });
 
   return user;
+};
+
+/**
+ * Change password
+ * @param {ObjectId} userId
+ * @param {string} currentPassword
+ * @param {string} newPassword
+ * @returns {Promise}
+ */
+const changePassword = async (userId, currentPassword, newPassword) => {
+  const user = await userService.getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+  if (!user.password) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "Cannot change password for accounts without a password",
+    );
+  }
+  if (!(await user.isPasswordMatch(currentPassword))) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Current password is incorrect");
+  }
+  await userService.updateUserById(userId, { password: newPassword });
 };
 
 module.exports = {
@@ -192,4 +195,5 @@ module.exports = {
   resetPassword,
   verifyEmail,
   loginWithGoogle,
+  changePassword,
 };

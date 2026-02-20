@@ -77,8 +77,10 @@ const googleAuth = catchAsync(async (req, res) => {
   res.send({ user, tokens });
 });
 
-const getMe = catchAsync(async (req, res) => {
-  res.send(req.user);
+const changePassword = catchAsync(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  await authService.changePassword(req.user.id, currentPassword, newPassword);
+  res.status(httpStatus.NO_CONTENT).send();
 });
 
 module.exports = {
@@ -92,5 +94,5 @@ module.exports = {
   verifyEmail,
   getRoles,
   googleAuth,
-  getMe,
+  changePassword,
 };

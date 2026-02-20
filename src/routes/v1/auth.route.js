@@ -44,7 +44,12 @@ router.post(
   authController.verifyEmail,
 );
 router.get("/roles", auth("getRoles"), authController.getRoles);
-router.get("/me", auth(), authController.getMe);
+router.post(
+  "/change-password",
+  auth(),
+  validate(authValidation.changePassword),
+  authController.changePassword,
+);
 
 module.exports = router;
 
@@ -395,6 +400,60 @@ module.exports = router;
  *         description: No content
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /auth/change-password:
+ *   post:
+ *     summary: Change password
+ *     description: Allows authenticated users to change their password by providing the current password and a new password.
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 format: password
+ *                 description: The user's current password
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 8
+ *                 description: The new password (at least one number and one letter)
+ *             example:
+ *               currentPassword: OldPass@123
+ *               newPassword: NewPass@456
+ *     responses:
+ *       "204":
+ *         description: Password changed successfully
+ *       "400":
+ *         description: Cannot change password for accounts without a password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               code: 400
+ *               message: Cannot change password for accounts without a password
+ *       "401":
+ *         description: Current password is incorrect or not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               code: 401
+ *               message: Current password is incorrect
  */
 
 /**
